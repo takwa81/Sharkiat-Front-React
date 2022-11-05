@@ -37,7 +37,7 @@ const EditCategory = () => {
 
         const response =  axios({
             method: "post",
-            url: `http://127.0.0.1:8000/api/updateCategory/${id}`,
+            url: `https://sharkiat.moe-hassan.com/api/updateCategory/${id}`,
             data: formData,
             headers: {
                  "Content-Type": "multipart/form-data",

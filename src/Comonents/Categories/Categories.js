@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Login from "../Auth/Login";
 import Sidebar from "../Dashboard/Sidebar";
-import File from '../Auth/logo.png';
 import { Link } from "react-router-dom";
 import AuthUser from "../Auth/AuthUser";
 
 const Categories = () => {
 
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { http } = AuthUser();
+  let componentMounted = true;
 
-   
+  const  loadCategories = async () => {
+    setLoading(true);
+    await http.get("/categories").then((res) => {
+        if (componentMounted) {
+          setCategories(res.data.reverse());
+          setLoading(false);
+      }
+      return () => {
+          componentMounted = false;
+      }
+    });
+}
 
 
-    const { http } = AuthUser();
-    // http.get('/categories').then(res=>{
-    //     console.log(res.data);
-    // })
-
-
-    function loadCategories() {
-        http.get("/categories").then((res) => {
-            setCategories(res.data.reverse());
-        });
-    }
 
     useEffect(() => {
         loadCategories();
@@ -54,6 +56,8 @@ const Categories = () => {
                       
                         <div className="container-fluid ml-5">
                           <div className="row justify-content-center text-center">
+                            {loading ? <div><h5>جار تحميل الأصناف ....</h5></div> : 
+                            <>
                           {categories.map((data, index) => (
                             <div className="col-lg-3 mt-5 mb-2">
                             <div class="card" >
@@ -69,7 +73,9 @@ const Categories = () => {
                             </div>
                             </div>
                           ))}
+                              </>}
                           </div>
+
                         </div>
                       
                 </main>

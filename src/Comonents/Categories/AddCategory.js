@@ -25,7 +25,7 @@ const AddCategory = () => {
 
         const response =  axios({
             method: "post",
-            url: "http://127.0.0.1:8000/api/category",
+            url: "https://sharkiat.moe-hassan.com/api/category",
             data: formData,
             headers: {
                  "Content-Type": "multipart/form-data",

@@ -3,7 +3,7 @@ import {Link , useNavigate} from "react-router-dom" ;
 import swal from 'sweetalert';
 
 const Sidebar = () =>{
-    const [isExpanded, setExpendState] = useState(true);
+    const [isExpanded, setExpendState] = useState(false);
     const [theme, setTheme] = useState(false);
 
     useEffect(()=>{

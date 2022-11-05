@@ -59,7 +59,7 @@ const Config = () =>{
 
         const response =  axios({
             method: "put",
-            url: 'http://127.0.0.1:8000/api/config',
+            url: 'https://sharkiat.moe-hassan.com/api/config',
             data: data,
             headers: {
                  "Content-type" : "application/json",
@@ -145,7 +145,7 @@ const Config = () =>{
                                             </div>
                                         </div>
 
-                                        <div className="col-xl-5 col-lg-5 col-md-10 mx-auto mb-4">
+                                        <div className="col-xl-5 col-lg-5 col-md-10 mb-4">
                                             <div className="form-group mb-3">
                                                 <label className="form-control-label"> <i class="fas fa-map-marker-alt me-2"></i> العنوان </label>
                                                 <div className="controls">

@@ -25,7 +25,7 @@ const Login = (e) => {
             if(res.data.status === 200){
                 console.log(res.data);
                 localStorage.setItem('token',res.data.token);
-                swal("Success",res.data.message,"success");
+                swal("Success","تم تسجيل الدخول بنجاح","success");
                 if(res.data.role === '1')
                 {
                    navigate('/dashboard') ;
@@ -35,7 +35,7 @@ const Login = (e) => {
             }
             else if(res.data.status === 401)
             {
-                swal("Warning",res.data.message,"warning");
+                swal("Warning","خطأ في الايميل أو كلمة المرور يرجى التأكد والمحاولة مجددا ..","warning");
             }
             else
             {

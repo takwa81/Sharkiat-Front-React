@@ -9,13 +9,13 @@ import Sidebar from "../Dashboard/Sidebar";
 const AddProduct = () =>{
 
     const [name , setName] = useState('');
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState();
     const [discount, setDiscount] = useState(0);
     const [quantity , setQuantity] = useState(0);
     const [description , setDescription] = useState('');
     const [is_appear_home , setIsAppearHome] = useState(0);
     const [category_id , setCategoryId] = useState(0);
-    const [expire_date , setExpireDate] = useState(new Date().toJSON());
+    const [expire_date , setExpireDate] = useState('2016-02-13 15:48:29');
 
     const [images , setImages] = useState([]);
 
@@ -27,28 +27,19 @@ const AddProduct = () =>{
     const { http } = AuthUser();
   
     const onChange = (e) => {
+        console.log(e.target.files[0]);
         for (const file of e.target.files) {
           const reader = new FileReader();
           reader.readAsDataURL(file);
           reader.onload = () => {
-            setImages((imgs) => [...imgs, reader.result]);
+            setImages(imgs=>([...imgs,{file:file,path:reader.result}]));
           };
           reader.onerror = () => {
             console.log(reader.error);
           };
-        }
 
-        // setImages(e.target.files);
-        // console.log(images);
 
-            // const newArray = images.map((item, i) => {
-            //   if (index === i) {
-            //     return { ...item, [e.target.image]: e.target.files };
-            //   } else {
-            //     return item;
-            //   }
-            // });
-            // setImages(newArray);
+        }      
       };
 
       console.log(images, images.length)
@@ -80,21 +71,18 @@ const AddProduct = () =>{
         formData.append("is_appear_home", is_appear_home);
         formData.append("category_id", category_id);
         formData.append("expire_date", expire_date);
-
+       
+    
           
-            for (let i = 0; i < images.length; i++) {
-                formData.append('images[]',JSON.stringify(images[i]));                      
-            }
-          
-        // images.forEach(image=>{
-        //     formData.append('images[]', image)
-        // });
+        images.forEach(image=>{
+            formData.append('images[]', image.file)
+        });
 
        
 
         const response =  axios({
             method: "post",
-            url: "http://127.0.0.1:8000/api/product",
+            url: "https://sharkiat.moe-hassan.com/api/product",
             data: formData,
             headers: {
                  "Content-Type": "multipart/form-data",
@@ -102,8 +90,11 @@ const AddProduct = () =>{
          },
           }).then(res=>{
             console.log(res.data);
-            swal("Success","Products Added Succesfully","success");
+            swal("Success","تم إضافة المنتج بنجاح","success");
             navigate('/products')
+          })
+          .catch(error=>{
+            console.log(error);
           });
        
         
@@ -136,7 +127,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label"> اسم المنتج </label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control" name="name" onChange={e => setName(e.target.value)} value={name}  size="16" type="text" />
+                                                        <input id="prependedInput" className="form-control" name="name" onChange={e => setName(e.target.value)}   size="16" type="text" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -144,7 +135,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label">   سعر المنتج</label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control"  size="16" type="text" name="price" onChange={e => setPrice(e.target.value)} value={price} />
+                                                        <input id="prependedInput" className="form-control"  size="16" type="text" name="price" onChange={e => setPrice(e.target.value)} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -152,7 +143,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label"> معدل الحسم</label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control" name="discount" onChange={e => setDiscount(e.target.value)} value={discount} placeholder="%"  size="16" type="number" />
+                                                        <input id="prependedInput" className="form-control" name="discount" onChange={e => setDiscount(e.target.value)}  placeholder="%"  size="16" type="number" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -160,7 +151,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label">  تاريخ انتهاء الحسم</label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control" name="expire_date" onChange={e => setExpireDate(e.target.value)} value={expire_date} size="16" type="date" />
+                                                        <input id="prependedInput" className="form-control" name="expire_date" onChange={e => setExpireDate(e.target.value)}  size="16" type="date" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,7 +159,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label"> عدد المنتجات</label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control"  size="16" type="number" name="quantity" onChange={e => setQuantity(e.target.value)} value={quantity}  />
+                                                        <input id="prependedInput" className="form-control"  size="16" type="number" name="quantity" onChange={e => setQuantity(e.target.value)}  />
                                                     </div>
                                                 </div>
                                             </div>
@@ -180,7 +171,6 @@ const AddProduct = () =>{
                                                         class="custom-select tm-select-accounts"
                                                         id="category"
                                                         name="category_id"
-                                                        value={category_id}
                                                         onChange={e => setCategoryId(e.target.value)} 
                                                     >
                                                           {categories.map((data) => (
@@ -201,7 +191,7 @@ const AddProduct = () =>{
                                                 <label className="form-control-label"> الوصف </label>
                                                 <div className="controls">
                                                     <div className="input-prepend input-group">
-                                                    <textarea class="form-control validate" name="address" id="address" cols="30" rows="3"value={description} onChange={e=>setDescription(e.target.value)} > 
+                                                    <textarea class="form-control validate" name="description" id="address" cols="30" rows="3" onChange={e=>setDescription(e.target.value)} > 
                                                               
                                                     </textarea>
                                                     </div>
@@ -210,7 +200,7 @@ const AddProduct = () =>{
                                           
                                             <div class="form-group mb-3">
                                                 <label for="description">عرض في الصفحة الرئيسية ؟</label> <br />
-                                                <input  type="checkbox" name="is_appear_home" value={is_appear_home} onChange={e=>setIsAppearHome(e.target.value)} />
+                                                <input  type="checkbox" name="is_appear_home"  onChange={e=>setIsAppearHome(e.target.value)} value={is_appear_home} />
                                                 <label for="">عرض </label>
                                             </div>
                                             <div className="form-group mb-3">
@@ -222,7 +212,7 @@ const AddProduct = () =>{
                                                             <input className="form-control form-control-lg" onChange={onChange} name="images[]"  type="file" multiple />
                                                         
                                                                 {images.map((link) => (
-                                                                        <img src={link} width="100" height="100" />
+                                                                        <img src={link.path} width="100" height="100" />
                                                                 ))}
                                                                 
                                                         </div>

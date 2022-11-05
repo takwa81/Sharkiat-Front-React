@@ -5,9 +5,8 @@ import axios from 'axios';
 export default function AuthUser(){
   let token = localStorage.getItem("token");
     const http = axios.create({
-        baseURL:"http://localhost:8000/api",
+        baseURL:"https://sharkiat.moe-hassan.com/api",
         headers:{
-            "Content-type" : "application/json",
             "X-Requested-With" : "XMLHttpRequest" ,
             'Authorization': `Bearer ${token}`,
         }
