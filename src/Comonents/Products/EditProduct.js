@@ -16,11 +16,9 @@ const EditProduct = () =>{
     const [is_appear_home , setIsAppearHome] = useState(0);
     const [category_id , setCategoryId] = useState(0);
     const [expire_date , setExpireDate] = useState('2016-02-13 15:48:29');
-
     const [images , setImages] = useState([]);
-
-   
     const [categories, setCategories] = useState([]);
+    const [loading , setLoading] = useState(false);
 
     const navigate = useNavigate();
     const {http} = AuthUser() ;
@@ -72,7 +70,7 @@ const EditProduct = () =>{
         return (<Login></Login>)
     }
 
-    function editProduct(e){
+    const editProduct= async(e)=>{
         
         let token = localStorage.getItem("token");
         e.preventDefault();
@@ -92,21 +90,28 @@ const EditProduct = () =>{
             formData.append('images[]', image.file)
         });
 
-        const response =  axios({
-            method: "post",
-            url: `https://sharkiat.moe-hassan.com/api/updateProduct/${id}`,
-            data: formData,
-            headers: {
-                 "Content-Type": "multipart/form-data",
-                 "Authorization": `Bearer ${token}`,
-         },
-          }).then(res=>{
-            swal("Success","تم تعديل البيانات بنجاح","success");
-            navigate('/products')
-          })
-           .catch(error=>{
-            console.log(error);
-          });
+        setLoading(true);
+        try{
+            const response = await axios({
+                method: "post",
+                url: `https://sharkiat.moe-hassan.com/api/updateProduct/${id}`,
+                data: formData,
+                headers: {
+                     "Content-Type": "multipart/form-data",
+                     "Authorization": `Bearer ${token}`,
+             },
+              }).then(res=>{
+                swal("Success","تم تعديل البيانات بنجاح","success");
+                navigate('/products')
+              })
+               .catch(error=>{
+                console.log(error);
+              });
+
+        }catch(e){
+            console.log(e);
+        }
+       
     }
     return(
 
@@ -235,7 +240,9 @@ const EditProduct = () =>{
                                         </div>
                                         <div className="col-12 ">
                                         <div className="form-actions">
-                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold"> حفظ التغييرات</button>
+                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold" disabled={loading}> 
+                                                {loading ? (<> يتم حفظ التعديلات <i className="fa fa-spinner fa-spin"></i></>) : <>حفظ التغييرات</>}
+                                                </button>
                                             </div>
                                         </div>
                                         </div>

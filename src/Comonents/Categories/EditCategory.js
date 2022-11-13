@@ -10,6 +10,7 @@ const EditCategory = () => {
 
     const [name , setName] = useState('');
     const [image, setImage] = useState(null);
+    const [loading , setLoading] = useState(false);
     const navigate = useNavigate();
     const {http} = AuthUser() ;
     const { id } = useParams();
@@ -27,28 +28,32 @@ const EditCategory = () => {
         return (<Login></Login>)
     }
 
-      function edit(e){
+    const edit = async (e) =>{
         let token = localStorage.getItem("token");
         e.preventDefault();
 
         const formData = new FormData();
         formData.append("image", image);
         formData.append("name", name);
+        setLoading(true);
 
-        const response =  axios({
-            method: "post",
-            url: `https://sharkiat.moe-hassan.com/api/updateCategory/${id}`,
-            data: formData,
-            headers: {
-                 "Content-Type": "multipart/form-data",
-                 "Authorization": `Bearer ${token}`,
-         },
-          }).then(res=>{
-            swal("Success","Category Updated Succesfully","success");
-            navigate('/categories')
-          });
-       
-        
+        try{
+            const response =  await axios({
+                method: "post",
+                url: `https://sharkiat.moe-hassan.com/api/updateCategory/${id}`,
+                data: formData,
+                headers: {
+                     "Content-Type": "multipart/form-data",
+                     "Authorization": `Bearer ${token}`,
+             },
+              }).then(res=>{
+                swal("Success","Category Updated Succesfully","success");
+                navigate('/categories')
+              });
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 
     return (
@@ -95,7 +100,9 @@ const EditCategory = () => {
                                                 </div>
                                             </div>
                                             <div className="form-actions">
-                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold">حفظ التغييرات</button>
+                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold" disabled={loading}>
+                                                {loading ? (<> يتم حفظ التعديلات <i className="fa fa-spinner fa-spin"></i></>) : <>حفظ التغييرات</>}
+                                                </button>
                                             </div>
                                         </form>
                                     </div>

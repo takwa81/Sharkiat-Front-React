@@ -17,7 +17,7 @@ const Config = () =>{
     const [close , setClose] = useState('');
     const [open , setOpen] = useState('');
     const [ads , setAds] = useState('');
-
+    const [loading , setLoading] = useState(false);
     const {http} = AuthUser();
     const navigate = useNavigate();
     useEffect(() => {
@@ -40,7 +40,7 @@ const Config = () =>{
        return(<Login></Login>)
     }
 
-    function updateConfig(e){
+    const updateConfig = async (e) =>{
         let token = localStorage.getItem("token");
         e.preventDefault();
 
@@ -57,20 +57,26 @@ const Config = () =>{
             whatsapp: whatsapp,
         };
 
-        const response =  axios({
-            method: "put",
-            url: 'https://sharkiat.moe-hassan.com/api/config',
-            data: data,
-            headers: {
-                 "Content-type" : "application/json",
-                 "X-Requested-With" : "XMLHttpRequest" ,
-                 "Authorization": `Bearer ${token}`,
-         },
-          }).then(res=>{
-            swal("Success","Config Updated Succesfully","success");
-            navigate('/config')
-          });
-       
+        setLoading(true);
+        try{
+            const response = await axios({
+                method: "put",
+                url: 'https://sharkiat.moe-hassan.com/api/config',
+                data: data,
+                headers: {
+                     "Content-type" : "application/json",
+                     "X-Requested-With" : "XMLHttpRequest" ,
+                     "Authorization": `Bearer ${token}`,
+             },
+              }).then(res=>{
+                swal("Success","تم حفظ التعدبلات بنجاح","success");
+                navigate('/config')
+              });    
+
+        }
+        catch(e){
+            console.log(e);
+        }
         
     }
 
@@ -186,7 +192,9 @@ const Config = () =>{
                                         </div>
                                         <div className="col-12 ">
                                         <div className="form-actions">
-                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold">حفظ التغييرات</button>
+                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold">
+                                                {loading ? (<> يتم حفظ التعديلات <i className="fa fa-spinner fa-spin"></i></>) : <>حفظ التغييرات</>}
+                                                </button>
                                             </div>
                                         </div>
                                         </div>

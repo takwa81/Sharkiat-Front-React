@@ -3,7 +3,7 @@ import {Link , useNavigate} from "react-router-dom" ;
 import swal from 'sweetalert';
 
 const Sidebar = () =>{
-    const [isExpanded, setExpendState] = useState(false);
+    const [isExpanded, setExpendState] = useState(true);
     const [theme, setTheme] = useState(false);
 
     useEffect(()=>{
@@ -30,11 +30,6 @@ const Sidebar = () =>{
 
     
     const menuItems = [
-		{
-			text: "لوحة التحكم",
-			icon: "fas fa-tachometer-alt icon",
-            to: "/dashboard"
-		},
 		{
 			text: "الأصناف",
 			icon: "fa fa-solid fa-bag-shopping icon",
@@ -98,7 +93,7 @@ const Sidebar = () =>{
                 </ul>
             </div>
 
-            <div className="bottom-content">
+            {/* <div className="bottom-content">
 
                 <li className="mode">
                     <div className="sun-moon">
@@ -112,7 +107,7 @@ const Sidebar = () =>{
                     </div>
                 </li>
                 
-            </div>
+            </div> */}
         </div>
 
     </nav>

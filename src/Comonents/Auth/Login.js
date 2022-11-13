@@ -10,8 +10,12 @@ const Login = (e) => {
     const [email , setEmail] = useState('');
     const [password , setPassword] = useState('');
     const [errorList, setErrorList]= useState([]);
+    const [loading , setLoading] = useState(false);
     const navigate = useNavigate();
-    function login(e){
+
+
+
+    const login= async(e) =>{
     const {http} = AuthUser();
 
         e.preventDefault() ;
@@ -21,34 +25,39 @@ const Login = (e) => {
             password: password ,
         }
 
-        http.post('/login',data ).then((res)=>{
-            if(res.data.status === 200){
-                console.log(res.data);
-                localStorage.setItem('token',res.data.token);
-                swal("Success","تم تسجيل الدخول بنجاح","success");
-                if(res.data.role === '1')
-                {
-                   navigate('/dashboard') ;
-                } else{
-                    swal("Warning",'You Should Admin Role',"warning")
-                }
-            }
-            else if(res.data.status === 401)
-            {
-                swal("Warning","خطأ في الايميل أو كلمة المرور يرجى التأكد والمحاولة مجددا ..","warning");
-            }
-            else
-            {
-                setErrorList({errorList: res.data.validation_errors });
-            }
-    
-        })
-        .catch(error=>{
-            alert("Error Service");
-        })
-        
+        setLoading(true)
+        try{
 
-       
+          await http.post('/login',data ).then((res)=>{
+                if(res.data.status === 200){
+                    console.log(res.data);
+                    localStorage.setItem('token',res.data.token);
+                    swal("Success","تم تسجيل الدخول بنجاح","success");
+                    if(res.data.role === '1')
+                    {
+                       navigate('/categories') ;
+                    } else{
+                        swal("Warning",'You Should Admin Role',"warning")
+                    }
+                }
+                else if(res.data.status === 401)
+                {
+                    swal("Warning","خطأ في الايميل أو كلمة المرور يرجى التأكد والمحاولة مجددا ..","warning");
+                }
+                else
+                {
+                    setErrorList({errorList: res.data.validation_errors });
+                }
+        
+            })
+            .catch(error=>{
+                alert("Error Service");
+            })
+        }
+        catch(e){
+            console.log(e);
+        }
+        
     }
     return (
         <div className="wrapper">
@@ -74,7 +83,11 @@ const Login = (e) => {
                 <span className="text-danger">{errorList.password}</span>
 
                 </div>
-                <button className="btn mt-3" onClick={login}>Login</button>
+                <button className="btn mt-3" onClick={login} disabled={loading}>
+
+                {loading ? (<> يتم تسجيل الدخول  <i className="fa fa-spinner fa-spin"></i></>) : <> تسجيل الدخول</>}
+
+                </button>
             </form>
             
         </div>

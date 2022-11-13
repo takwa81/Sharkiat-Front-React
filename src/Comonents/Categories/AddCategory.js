@@ -9,6 +9,7 @@ const AddCategory = () => {
 
     const [name , setName] = useState('');
     const [image, setImage] = useState(null);
+    const [loading , setLoading] = useState(false);
     const navigate = useNavigate();
 
     let session = localStorage.getItem('token');
@@ -16,25 +17,34 @@ const AddCategory = () => {
         return (<Login></Login>)
     }
 
-    function addCategory(e){
+    const addCategory = async (e) =>{
         let token = localStorage.getItem("token");
         e.preventDefault();
         const formData = new FormData();
         formData.append("image", image);
         formData.append("name", name);
+        setLoading(true);
 
-        const response =  axios({
-            method: "post",
-            url: "https://sharkiat.moe-hassan.com/api/category",
-            data: formData,
-            headers: {
-                 "Content-Type": "multipart/form-data",
-                 "Authorization": `Bearer ${token}`,
-         },
-          }).then(res=>{
-            swal("Success","Category Added Succesfully","success");
-            navigate('/categories')
-          });
+        try{
+            const response = await axios({
+                method: "post",
+                url: "https://sharkiat.moe-hassan.com/api/category",
+                data: formData,
+                headers: {
+                     "Content-Type": "multipart/form-data",
+                     "Authorization": `Bearer ${token}`,
+             },
+              }).then(res=>{
+                swal("Success","Category Added Succesfully","success");
+                navigate('/categories');
+              }).catch(error=>{
+                alert("يرجى التأكد من الاتصال بالانترنت والمحاولة مجددا...");
+            });
+        }
+        catch(e){
+            console.log(e);
+        }
+       
        
         
     }
@@ -82,7 +92,9 @@ const AddCategory = () => {
                                                 </div>
                                             </div>
                                             <div className="form-actions">
-                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold">إضافة</button>
+                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold" disabled={loading}>
+                                                 {loading ? (<>تتم الإضافة <i className="fa fa-spinner fa-spin"></i></>) : <>إضافة</>}
+                                                 </button>
                                             </div>
                                         </form>
                                     </div>

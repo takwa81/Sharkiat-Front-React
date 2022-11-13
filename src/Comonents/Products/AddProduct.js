@@ -16,11 +16,9 @@ const AddProduct = () =>{
     const [is_appear_home , setIsAppearHome] = useState(0);
     const [category_id , setCategoryId] = useState(0);
     const [expire_date , setExpireDate] = useState('2016-02-13 15:48:29');
-
     const [images , setImages] = useState([]);
-
-   
     const [categories, setCategories] = useState([]);
+    const [loading , setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -59,7 +57,7 @@ const AddProduct = () =>{
         return (<Login></Login>)
     }
 
-    function addProduct(e){
+    const addProduct=async (e)=>{
         let token = localStorage.getItem("token");
         e.preventDefault();
         const formData = new FormData();
@@ -78,9 +76,9 @@ const AddProduct = () =>{
             formData.append('images[]', image.file)
         });
 
-       
-
-        const response =  axios({
+        setLoading(true);
+       try{
+        const response =  await axios({
             method: "post",
             url: "https://sharkiat.moe-hassan.com/api/product",
             data: formData,
@@ -90,14 +88,22 @@ const AddProduct = () =>{
          },
           }).then(res=>{
             console.log(res.data);
-            swal("Success","تم إضافة المنتج بنجاح","success");
-            navigate('/products')
+            if(res.data.status === 224){
+                swal("Warning", "يجب إضافة أصناف أولا....","warning");
+                navigate('/categories');
+            }else{
+                swal("Success","تم إضافة المنتج بنجاح","success");
+                navigate('/products')
+            }
+            
           })
           .catch(error=>{
             console.log(error);
           });
-       
-        
+
+       }catch(e){
+        console.log(e);
+       } 
     }
 
 
@@ -223,7 +229,9 @@ const AddProduct = () =>{
                                         </div>
                                         <div className="col-12 ">
                                         <div className="form-actions">
-                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold"> إضافة</button>
+                                                <button type="submit" className="btn btn-outline-dark btn-block fw-bold" disabled={loading}> 
+                                                {loading ? (<>تتم الإضافة <i className="fa fa-spinner fa-spin"></i></>) : <>إضافة</>}
+                                                </button>
                                             </div>
                                         </div>
                                         </div>

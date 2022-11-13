@@ -3,6 +3,7 @@ import Login from "../Auth/Login";
 import Sidebar from "../Dashboard/Sidebar";
 import { Link } from "react-router-dom";
 import AuthUser from "../Auth/AuthUser";
+import NoData from '../Dashboard/image/nodata.png';
 
 const Categories = () => {
 
@@ -39,6 +40,15 @@ const Categories = () => {
     if (!session) {
         return (<Login></Login>)
     }
+
+    const Loading = () =>{
+      return(
+        <>
+        <center><div className="text-primary fs-5"><i className="fa fa-spinner fa-spin"></i></div></center>
+        </>
+      );
+    }
+
     return (
         <div>
             <Sidebar />
@@ -56,7 +66,8 @@ const Categories = () => {
                       
                         <div className="container-fluid ml-5">
                           <div className="row justify-content-center text-center">
-                            {loading ? <div><h5>جار تحميل الأصناف ....</h5></div> : 
+                            
+                          {loading ? <Loading></Loading> : 
                             <>
                           {categories.map((data, index) => (
                             <div className="col-lg-3 mt-5 mb-2">
@@ -73,7 +84,9 @@ const Categories = () => {
                             </div>
                             </div>
                           ))}
-                              </>}
+                              </>
+                              
+                           }
                           </div>
 
                         </div>
