@@ -8,6 +8,7 @@ import NoData from '../Dashboard/image/nodata.png';
 const Products = () =>{
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadded , setLoadded] = useState(false);
     let componentMounted = true;
     const { http } = AuthUser();
 
@@ -34,6 +35,10 @@ const Products = () =>{
       
       }
 
+
+      const imageLoaded = () =>{
+        setLoadded(true);
+      }
 
     let session = localStorage.getItem('token');
     if(!session){
@@ -70,12 +75,13 @@ const Products = () =>{
                 {products.map((data, index) => (
                 <div className="col-lg-3 mt-5 mb-2">
                 <div class="card" >
-                    <img class="card-img-top" src={data.images[0].image} height="200" alt="Product image "/>
+                    <img class="card-img-top" src={data.images[0].image} onLoad={imageLoaded} height="200" alt="Product image "/>
+                    {!loadded && <center><i className="fa fa-spinner fa-spin"></i></center>}
                     <div class="card-body">
                     <h5 class="card-title2">{data.name}</h5>
                     <p>{data.description.substring(0,30)}</p>
                     <div class="stats mt-2">
-                        <div class="d-flex justify-content-between p-price">{data.discount ? <strike className="text-danger">${data.price}</strike>:<div></div>}<span>{data.sale_price}$</span> </div>
+                        <div class="d-flex justify-content-center p-price"><span className="text-danger text-bold">{data.price}$</span> </div>
                     </div>
                     </div>
                     <div className="card-footer">

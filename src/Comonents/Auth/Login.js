@@ -37,12 +37,14 @@ const Login = (e) => {
                     {
                        navigate('/categories') ;
                     } else{
-                        swal("Warning",'You Should Admin Role',"warning")
+                        swal("Warning",'You Should Admin Role',"warning");
+                        setLoading(false)
                     }
                 }
                 else if(res.data.status === 401)
                 {
                     swal("Warning","خطأ في الايميل أو كلمة المرور يرجى التأكد والمحاولة مجددا ..","warning");
+                    setLoading(false)
                 }
                 else
                 {
@@ -52,6 +54,7 @@ const Login = (e) => {
             })
             .catch(error=>{
                 alert("Error Service");
+                setLoading(false)
             })
         }
         catch(e){

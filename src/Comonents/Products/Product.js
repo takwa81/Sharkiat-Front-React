@@ -10,11 +10,24 @@ const Product = () => {
     const {id} = useParams() ;
 
     const [product , setProduct] = useState([]);
+    const [loading , setLoading] = useState(false);
+    let componentMounted = true;
     
-    useEffect(() => {
-        http.get(`product/${id}`).then((res) => {
-            setProduct(res.data);
+    const loadProduct = async() =>{
+        setLoading(true);
+        await http.get(`product/${id}`).then((res) => {
+
+            if (componentMounted) {
+                setProduct(res.data);
+                setLoading(false);
+            }
+            return () => {
+                componentMounted = false;
+            }
         });
+    }
+    useEffect(() => {
+       loadProduct();
       }, []);
       console.log(product);
 
@@ -24,12 +37,22 @@ const Product = () => {
         return (<Login></Login>)
     }
     
+
+    const Loading = () =>{
+        return(
+          <>
+          <center><div className="text-primary fs-5"><i className="fa fa-spinner fa-spin fs-5"></i></div></center>
+          </>
+        );
+      }
+
     return (
         <div>
             <Sidebar />
 
             <main className="home">
                 <h2 className="text-center mt-5 mb-3 text">المنتجات </h2>
+             
                 {product && (
                 <>
                     <div className="container-fluid ml-5">
@@ -45,17 +68,29 @@ const Product = () => {
                     < div className="container mt-5 mb-5">
                         <div className="row d-flex justify-content-center">
                             <div className="col-md-10">
+                            {loading ? <Loading></Loading> : 
                                 <div className="card">
                                     <div className="row">
                                         <div className="col-md-6">
                                             {product.images ? 
+                                            // <div className="images p-3">
+                                            // <div className="text-center p-4"> <img id="main-image" src={product.images[0].image} width="250" /> </div>
+                                            //     <div className="thumbnail text-center">
+                                            //         {product.images.map((data,i) =>
+                                            //          <img src={data.image} width="70" />
+                                            //          )}
+                                            //      </div>
+                                            // </div>
                                             <div className="images p-3">
-                                            <div className="text-center p-4"> <img id="main-image" src={product.images[0].image} width="250" /> </div>
-                                                <div className="thumbnail text-center">
+                                               <div className="container-fluid">
+                                                <div className="row justify-content-center">
+                                                    <div className="col-md-6">
                                                     {product.images.map((data,i) =>
-                                                     <img src={data.image} width="70" />
+                                                     <img src={data.image} width="200" />
                                                      )}
-                                                 </div>
+                                                    </div>
+                                                </div>
+                                               </div>
                                             </div>
                                             : <div></div>}
                                         </div>
@@ -70,35 +105,21 @@ const Product = () => {
                                                     </p>
                                                     <div className="price">
                                                         <br></br>
-                                                        { product.quantity ?
-                                                        (<div>
-                                                          <span className="font-weight-bold">عدد القطع  : </span>
-                                                          <span className="act-price">{product.quantity}</span>
-                                                        </div>) : <div></div> }
-                                                        <br></br> 
-
+                                                      
                                                         { product.price ?
                                                         (<div>
                                                           <span className="font-weight-bold"> السعر : </span>
-                                                          <span className="act-price">${product.sale_price}</span>
+                                                          <span className="act-price">${product.price}</span>
                                                         </div>) : <div></div> }
                                                            <br></br>
-                                                        { product.discount ? <div className=""> 
-                                                        <span> حسم {product.discount}%</span>
-                                                         <br></br>
-                                                         <br></br>
-                                                        <strike className="dis-price text-danger">${product.price}</strike>
-                                                        <br></br> 
-                                                        <br></br> 
-                                                        <span> ينتهي الحسم بتايخ <span className="text-success">{product.expire_date}</span></span>
-                                                         </div> : <div></div>}
+                                                      
                                                     </div>
                                                 </div>
                                                 
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>}
                             </div>
                         </div>
                     </div>

@@ -10,12 +10,9 @@ const EditProduct = () =>{
 
     const [name , setName] = useState('');
     const [price, setPrice] = useState(1);
-    const [discount, setDiscount] = useState(0);
-    const [quantity , setQuantity] = useState(0);
     const [description , setDescription] = useState('');
-    const [is_appear_home , setIsAppearHome] = useState(0);
+    const [is_appear_home , setIsAppearHome] = useState(1);
     const [category_id , setCategoryId] = useState(0);
-    const [expire_date , setExpireDate] = useState('2016-02-13 15:48:29');
     const [images , setImages] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading , setLoading] = useState(false);
@@ -56,11 +53,8 @@ const EditProduct = () =>{
             setImages(res.data.images);
             setPrice(res.data.price);
             setCategoryId(res.data.category_id);
-            setDiscount(res.data.discount);
-            setExpireDate(res.data.expire_date);
             setDescription(res.data.description);
             setIsAppearHome(res.data.is_appear_home);
-            setQuantity(res.data.quantity);
         });
       }, []);
 
@@ -78,11 +72,8 @@ const EditProduct = () =>{
         const formData = new FormData();
         formData.append("name", name);
         formData.append("price", price);
-        formData.append("discount", discount);
-        formData.append("quantity", quantity);
         formData.append("is_appear_home", is_appear_home);
         formData.append("category_id", category_id);
-        formData.append("expire_date", expire_date);
         formData.append("description", description);
 
           
@@ -106,6 +97,7 @@ const EditProduct = () =>{
               })
                .catch(error=>{
                 console.log(error);
+                setLoading(false)
               });
 
         }catch(e){
@@ -150,30 +142,7 @@ const EditProduct = () =>{
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="form-group mb-3">
-                                                <label className="form-control-label"> معدل الحسم</label>
-                                                <div className="controls">
-                                                    <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control" name="discount" onChange={e => setDiscount(e.target.value)} value={discount} placeholder="%"  size="16" type="number" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="form-group mb-3">
-                                                <label className="form-control-label">  تاريخ انتهاء الحسم</label>
-                                                <div className="controls">
-                                                    <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control" name="expire_date" onChange={e => setExpireDate(e.target.value)} value={expire_date} size="16" type="date" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="form-group mb-3">
-                                                <label className="form-control-label"> عدد المنتجات</label>
-                                                <div className="controls">
-                                                    <div className="input-prepend input-group">
-                                                        <input id="prependedInput" className="form-control"  size="16" type="number" name="quantity" onChange={e => setQuantity(e.target.value)} value={quantity}  />
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="form-group mb-3">
                                                 <label className="form-control-label"> الصنف</label>
                                                 <div className="controls">

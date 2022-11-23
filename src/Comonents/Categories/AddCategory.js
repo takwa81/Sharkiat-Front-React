@@ -39,6 +39,7 @@ const AddCategory = () => {
                 navigate('/categories');
               }).catch(error=>{
                 alert("يرجى التأكد من الاتصال بالانترنت والمحاولة مجددا...");
+                setLoading(false)
             });
         }
         catch(e){

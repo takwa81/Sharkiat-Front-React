@@ -9,6 +9,8 @@ const Categories = () => {
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadded , setLoadded] = useState(false);
+
   const { http } = AuthUser();
   let componentMounted = true;
 
@@ -36,6 +38,10 @@ const Categories = () => {
     
     }
 
+
+    const imageLoaded = () =>{
+      setLoadded(true);
+    }
     let session = localStorage.getItem('token');
     if (!session) {
         return (<Login></Login>)
@@ -72,7 +78,9 @@ const Categories = () => {
                           {categories.map((data, index) => (
                             <div className="col-lg-3 mt-5 mb-2">
                             <div class="card" >
-                              <img class="card-img-top" src={data.image} height="190px" alt="Card image cap"/>
+                           
+                              <img class="card-img-top" src={data.image} onLoad={imageLoaded} height="190px" alt="Card image cap"/>
+                              {!loadded && <center><i className="fa fa-spinner fa-spin"></i></center>}
                               <div class="card-body">
                                 <h5 class="card-title2">{data.name}</h5>
                                 </div>
