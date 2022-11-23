@@ -23,6 +23,7 @@ const EditProduct = () =>{
 
     const onChange = (e) => {
         console.log(e.target.files[0]);
+        setImages([]);
         for (const file of e.target.files) {
           const reader = new FileReader();
           reader.readAsDataURL(file);
@@ -198,7 +199,7 @@ const EditProduct = () =>{
                                                                     images.map((data)=>(
                                                                         <img src={data.image} width="100" height="100" />
                                                                     ))
-                                                                };
+                                                                }
 
                                                                 
                                                         </div>
